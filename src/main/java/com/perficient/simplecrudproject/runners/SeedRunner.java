@@ -26,7 +26,7 @@ public class SeedRunner implements CommandLineRunner {
         people.add(new Person("Kishan","Huliyar"));
         people.add(new Person("Kishan1","Huliyar2"));
         people.add(new Person("Kishan2","Huliyar3"));
-        people.add(new Person("Kishan3","Huliyar4"));
+        people.add(new Person("Kishan","Huliyar"));
         personRepository.saveAll(people);
     }
 }

@@ -17,12 +17,10 @@ import java.util.List;
 public class PersonController {
 
     public PersonService personService;
-    public AddressService addressService;
 
     @Autowired
-    public PersonController(PersonService personService, AddressService addressService) {
+    public PersonController(PersonService personService) {
         this.personService = personService;
-        this.addressService = addressService;
     }
 
     @GetMapping({"/"})
