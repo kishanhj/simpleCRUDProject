@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
+import java.util.concurrent.ExecutionException;
+
 @ControllerAdvice
 @Slf4j
 public class ControllerExceptionHandler {
@@ -25,7 +27,7 @@ public class ControllerExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({InterruptedException.class, ExecutionException.class,Exception.class})
     public ResponseEntity<ErrorMessage> internalServerError(Exception ex, WebRequest request) {
         log.error(ex.toString());
         return ResponseEntity.internalServerError().body(new ErrorMessage(ex.getMessage()));

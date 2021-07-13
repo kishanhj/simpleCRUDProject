@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -77,7 +78,7 @@ class PersonServiceImplTest {
     }
 
     @Test
-    void addPersonTestNormalFlow() {
+    void addPersonTestNormalFlow() throws ExecutionException, InterruptedException {
         Person expected = new Person("Kishan","Huliyar");
         expected.setId(1l);
         when(personRepository.save(expected)).thenReturn(expected);
