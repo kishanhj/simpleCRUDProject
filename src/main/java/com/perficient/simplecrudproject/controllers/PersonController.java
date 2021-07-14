@@ -2,6 +2,7 @@ package com.perficient.simplecrudproject.controllers;
 
 import com.perficient.simplecrudproject.model.Person;
 import com.perficient.simplecrudproject.services.PersonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Controller
+@Slf4j
 public class PersonController {
 
     public PersonService personService;
@@ -36,6 +38,7 @@ public class PersonController {
     @PostMapping({"/"})
     public ResponseEntity<Person> addPerson(@RequestBody Person p) throws ExecutionException, InterruptedException {
         Assert.notNull(p, "Person cannot be null");
+        log.info("Recieved request for : "+ p);
         return ResponseEntity.status(HttpStatus.CREATED).body(personService.addPerson(p));
     }
 
