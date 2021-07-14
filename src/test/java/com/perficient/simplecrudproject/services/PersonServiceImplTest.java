@@ -60,7 +60,7 @@ class PersonServiceImplTest {
     }
 
     @Test
-    void getAllPeopleTestNormalFlow() {
+    void getAllPeopleTestNormalFlow() throws ExecutionException, InterruptedException {
         ArrayList<Person> expected = new ArrayList<>(){{
             add(new Person("abc","def"));
             add(new Person("def","hij"));

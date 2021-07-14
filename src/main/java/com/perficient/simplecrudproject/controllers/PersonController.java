@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 @Controller
 @Slf4j
+@RequestMapping({"/person"})
 public class PersonController {
 
     public PersonService personService;
@@ -25,7 +26,7 @@ public class PersonController {
     }
 
     @GetMapping({"/"})
-    public ResponseEntity<List<Person>> getAllPeople() {
+    public ResponseEntity<List<Person>> getAllPeople() throws ExecutionException, InterruptedException {
         return ResponseEntity.ok(personService.getAllPeople());
     }
 

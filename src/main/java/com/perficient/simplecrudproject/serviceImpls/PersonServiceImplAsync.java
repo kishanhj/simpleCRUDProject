@@ -7,7 +7,6 @@ import com.perficient.simplecrudproject.repositories.AddressRepository;
 import com.perficient.simplecrudproject.repositories.PersonRepository;
 import com.perficient.simplecrudproject.services.PersonService;
 import org.springframework.context.annotation.Primary;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -32,7 +31,7 @@ public class PersonServiceImplAsync implements PersonService {
     public Person getPersonById(Long id) throws IllegalArgumentException, NoSuchPersonException, InterruptedException, ExecutionException {
         Assert.notNull(id, "ID cannot be null");
         Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1l);
-        Person p = personRepository.findById(id).orElse(null);
+        Person p = personRepository.findByIdAsync(id).get().orElse(null);
         if(null == p)
             throw new NoSuchPersonException("Person not Found");
         p.setAddresses(addresses.get());
@@ -40,9 +39,9 @@ public class PersonServiceImplAsync implements PersonService {
     }
 
     @Override
-    public List<Person> getAllPeople() {
+    public List<Person> getAllPeople() throws ExecutionException, InterruptedException {
         List<Person> people = new ArrayList<>();
-        personRepository.findAll().forEach(person -> {
+        personRepository.findAllAsync().get().forEach(person -> {
             person.setAddresses(addressRepository.getAddressesById(1l));
             people.add(person);
         });
@@ -53,7 +52,7 @@ public class PersonServiceImplAsync implements PersonService {
     public Person addPerson(Person p) throws ExecutionException, InterruptedException {
         Assert.notNull(p, "Person cannot be null");
         Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1l);
-        Person savedPerson = personRepository.save(p);
+        Person savedPerson = personRepository.saveAsync(p).get();
         savedPerson.setAddresses(addresses.get());
         return savedPerson;
     }
@@ -64,7 +63,7 @@ public class PersonServiceImplAsync implements PersonService {
         Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1l);
         if(!personRepository.existsById(p.getId()))
             throw new NoSuchPersonException("Person not Found");
-        Person updatedPerson = personRepository.save(p);
+        Person updatedPerson = personRepository.saveAsync(p).get();
         updatedPerson.setAddresses(addresses.get());
         return updatedPerson;
     }
@@ -74,7 +73,7 @@ public class PersonServiceImplAsync implements PersonService {
         Assert.notNull(p, "Person cannot be null");
         if(!personRepository.existsById(p.getId()))
             throw new NoSuchPersonException("Person not Found");
-        personRepository.delete(p);
+        personRepository.deleteAsync(p);
         return p.getId();
     }
 }

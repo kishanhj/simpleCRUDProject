@@ -12,7 +12,7 @@ public interface PersonService {
 
     public Person getPersonById(Long id) throws NoSuchPersonException, InterruptedException, ExecutionException;
 
-    public List<Person> getAllPeople();
+    public List<Person> getAllPeople() throws ExecutionException, InterruptedException;
 
     public Person addPerson(Person p) throws ExecutionException, InterruptedException;
 
