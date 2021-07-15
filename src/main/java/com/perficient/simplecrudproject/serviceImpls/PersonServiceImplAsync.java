@@ -6,7 +6,7 @@ import com.perficient.simplecrudproject.model.Person;
 import com.perficient.simplecrudproject.repositories.AddressRepository;
 import com.perficient.simplecrudproject.repositories.PersonRepository;
 import com.perficient.simplecrudproject.services.PersonService;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-@Primary
+@Profile("async")
 @Service
 public class PersonServiceImplAsync implements PersonService {
 
@@ -30,10 +30,12 @@ public class PersonServiceImplAsync implements PersonService {
     @Override
     public Person getPersonById(Long id) throws IllegalArgumentException, NoSuchPersonException, InterruptedException, ExecutionException {
         Assert.notNull(id, "ID cannot be null");
-        Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1l);
+        Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1L);
         Person p = personRepository.findByIdAsync(id).get().orElse(null);
-        if(null == p)
+        if(null == p){
+            addresses.cancel(true);
             throw new NoSuchPersonException("Person not Found");
+        }
         p.setAddresses(addresses.get());
         return p;
     }
@@ -42,7 +44,7 @@ public class PersonServiceImplAsync implements PersonService {
     public List<Person> getAllPeople() throws ExecutionException, InterruptedException {
         List<Person> people = new ArrayList<>();
         personRepository.findAllAsync().get().forEach(person -> {
-            person.setAddresses(addressRepository.getAddressesById(1l));
+            person.setAddresses(addressRepository.getAddressesById(1L));
             people.add(person);
         });
         return people;
@@ -51,7 +53,7 @@ public class PersonServiceImplAsync implements PersonService {
     @Override
     public Person addPerson(Person p) throws ExecutionException, InterruptedException {
         Assert.notNull(p, "Person cannot be null");
-        Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1l);
+        Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1L);
         Person savedPerson = personRepository.saveAsync(p).get();
         savedPerson.setAddresses(addresses.get());
         return savedPerson;
@@ -60,7 +62,7 @@ public class PersonServiceImplAsync implements PersonService {
     @Override
     public Person updatePerson(Person p) throws IllegalArgumentException, NoSuchPersonException, ExecutionException, InterruptedException {
         Assert.notNull(p, "Person cannot be null");
-        Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1l);
+        Future<List<Address>> addresses = addressRepository.getAddressesByIdAsync(1L);
         if(!personRepository.existsById(p.getId()))
             throw new NoSuchPersonException("Person not Found");
         Person updatedPerson = personRepository.saveAsync(p).get();
