@@ -12,8 +12,6 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-
     private String firstName;
     private String lastName;
 
@@ -34,6 +32,10 @@ public class Person {
 
     public void setAddresses(List<Address> addresses) {
         Addresses = addresses;
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof Person;
     }
 
 }

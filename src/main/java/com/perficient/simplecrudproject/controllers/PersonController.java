@@ -39,7 +39,7 @@ public class PersonController {
     @PostMapping({"/"})
     public ResponseEntity<Person> addPerson(@RequestBody Person p) throws ExecutionException, InterruptedException {
         Assert.notNull(p, "Person cannot be null");
-        log.info("Recieved request for : "+ p);
+        log.info("Received request for : "+ p);
         return ResponseEntity.status(HttpStatus.CREATED).body(personService.addPerson(p));
     }
 

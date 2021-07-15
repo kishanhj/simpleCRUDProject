@@ -5,12 +5,14 @@ import com.perficient.simplecrudproject.model.Person;
 import com.perficient.simplecrudproject.repositories.AddressRepository;
 import com.perficient.simplecrudproject.repositories.PersonRepository;
 import com.perficient.simplecrudproject.services.PersonService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Profile("seq")
 @Service
 public class PersonServiceImpl implements PersonService {
     public PersonRepository personRepository;
